@@ -1,0 +1,45 @@
+- name: Deploy app
+  hosts: app-multi-instances
+  become: true
+  vars:
+    SERVICE_NAME: gateway
+    
+  tasks: 
+    - name: Update APT package manager repositories cache
+      become: true
+      apt:
+        update_cache: yes
+        
+    - name: Install package ubuntu
+      become: true
+      apt: 
+        name: ['openjdk-8-jdk']
+        state: present
+    - name: Ensure jar folder exist
+      file:
+        path: /app/{{SERVICE_NAME}}/build
+        owner: tranphuochiep1997
+        group: tranphuochiep1997
+        state: directory
+        
+    - name: Copy jar file
+      copy:
+        src: '{{ JAR_FILE }}'
+        dest: '/app/{{SERVICE_NAME}}/build/app.jar'
+        owner: tranphuochiep1997
+        group: tranphuochiep1997
+        mode: '777'    
+        
+    - name: Copy systemd service file to server
+      copy:
+        src: '{{SERVICE_NAME}}.service'
+        dest: /etc/systemd/system
+        
+    - name: Restart service
+      systemd:
+        name: '{{SERVICE_NAME}}'
+        state: restarted
+        enabled: yes
+      environment:
+        EUREKA_URL: http://10.128.0.4:8761/eureka
+      
