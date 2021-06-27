@@ -41,5 +41,5 @@
         state: restarted
         enabled: yes
       environment:
-        EUREKA_URL: http://10.128.0.4:8761/eureka
+        EUREKA_URL: http://34.134.120.3:8761/eureka
       
