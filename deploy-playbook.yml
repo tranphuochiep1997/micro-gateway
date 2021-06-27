@@ -40,6 +40,8 @@
         name: '{{SERVICE_NAME}}'
         state: restarted
         enabled: yes
-      environment:
-        EUREKA_URL: http://34.134.120.3:8761/eureka
+        daemon_reload: yes
+#        systemd service không ăn biến môi trường, phải set trong /etc/systemd/system/gateway.service.d/override.conf
+#      environment:
+#        EUREKA_URL: http://34.134.120.3:8761/eureka
       
